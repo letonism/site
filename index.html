@@ -3,118 +3,1307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Letonism Official Website</title>
-    <meta name="description" content="The official website of Letonism. Dedicated to the faith of the one true God, Lord Elve, and the teachings of The Revelation Pentateuch.">
-    
+
+    <meta name="description"
+        content="The official website of Letonism, a faith centered on the One God Elvé and the teachings of the Revelation Pentateuch.">
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.8;
-            letter-spacing: 0.04em;
-            margin: 0;
-            padding: 0;
-            background-color: #0b0b0b;
-            color: #f0f0f0;
+        * {
+            box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            line-height: 1.8;
+            letter-spacing: 0.03em;
+            margin: 0;
+            background: #0b0b0b;
+            color: #eeeeee;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================
+           Navigation
+        ========================= */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.94);
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: auto;
+            padding: 14px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .nav-logo {
+            color: #d4af37;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            letter-spacing: 0.12em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .nav-links a {
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #d4af37;
+        }
+
+
+        /* =========================
+           Hero Header
+        ========================= */
+
         header {
-            background-color: #000000;
-            padding: 60px 20px;
+            background:
+                radial-gradient(
+                    circle at center,
+                    #191919 0%,
+                    #000000 70%
+                );
+
+            padding: 100px 20px;
             text-align: center;
+
             border-bottom: 1px solid #222;
         }
+
         header h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
+            font-family: Georgia, "Times New Roman", serif;
+
+            font-size: clamp(2.5rem, 7vw, 5rem);
+
+            letter-spacing: 0.12em;
             color: #d4af37;
-            margin: 0 0 10px 0;
+
+            margin: 0 0 12px;
             font-weight: 600;
         }
+
         header p {
-            font-size: 1.1rem;
-            color: #888;
+            font-size: 1.15rem;
+            color: #999;
+
             margin: 0;
             font-style: italic;
         }
 
-        /* メインコンテンツエリア */
+        .hero-subtitle {
+            max-width: 700px;
+
+            margin: 30px auto 0;
+
+            color: #bbb;
+            font-size: 1rem;
+        }
+
+
+        /* =========================
+           Main
+        ========================= */
+
         main {
-            max-width: 800px;
-            margin: 60px auto;
+            max-width: 1050px;
+
+            margin: 70px auto;
+
             padding: 0 20px;
         }
 
+        section {
+            margin-bottom: 90px;
+
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            font-family: Georgia, "Times New Roman", serif;
+
+            color: #d4af37;
+
+            font-size: 1.8rem;
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .section-title::after {
+            content: "";
+
+            display: block;
+
+            width: 60px;
+            height: 1px;
+
+            background: #d4af37;
+
+            margin: 15px auto 0;
+
+            opacity: 0.7;
+        }
+
+
+        /* =========================
+           Statement
+        ========================= */
+
         .statement-box {
             text-align: center;
+
             border: 1px solid #333;
-            padding: 40px 30px;
-            background-color: #111;
-            border-radius: 4px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            margin-bottom: 60px;
+
+            padding: 50px 35px;
+
+            background: #111;
+
+            border-radius: 6px;
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.4);
         }
+
         .statement {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
+            font-family: Georgia, "Times New Roman", serif;
+
+            font-size: 1.45rem;
+
             color: #e5e5e5;
-            line-height: 1.6;
+
+            line-height: 1.7;
+
+            margin: 0;
+        }
+
+        .statement-author {
+            margin-top: 20px;
+
+            color: #777;
+
+            font-size: 0.85rem;
+        }
+
+
+        /* =========================
+           Introduction
+        ========================= */
+
+        .intro {
+            max-width: 800px;
+
+            margin: auto;
+
+            text-align: center;
+
+            color: #ccc;
+        }
+
+        .intro p {
             margin-bottom: 20px;
         }
 
 
+        /* =========================
+           Cards
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(230px, 1fr));
+
+            gap: 20px;
+        }
+
+        .card {
+            background: #111;
+
+            border: 1px solid #292929;
+
+            border-radius: 5px;
+
+            padding: 28px;
+
+            transition:
+                border-color 0.2s,
+                transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: #6e5a20;
+
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            color: #d4af37;
+
+            font-family: Georgia, serif;
+
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #aaa;
+
+            margin-bottom: 0;
+        }
+
+
+        /* =========================
+           Scripture
+        ========================= */
+
+        .scripture {
+            background: #101010;
+
+            border-left: 3px solid #d4af37;
+
+            padding: 30px;
+
+            margin: 20px 0;
+        }
+
+        .scripture h3 {
+            color: #d4af37;
+
+            margin-top: 0;
+        }
+
+        .scripture p {
+            color: #bbb;
+        }
+
+
+        /* =========================
+           Beliefs
+        ========================= */
+
+        .belief-list {
+            max-width: 800px;
+
+            margin: auto;
+        }
+
+        .belief {
+            display: flex;
+
+            gap: 20px;
+
+            padding: 20px 0;
+
+            border-bottom: 1px solid #222;
+        }
+
+        .belief-number {
+            color: #d4af37;
+
+            font-family: Georgia, serif;
+
+            font-size: 1.3rem;
+
+            min-width: 35px;
+        }
+
+        .belief h3 {
+            margin: 0 0 5px;
+
+            color: #ddd;
+        }
+
+        .belief p {
+            margin: 0;
+
+            color: #999;
+        }
+
+
+        /* =========================
+           Religious Practice
+        ========================= */
+
+        .practice-box {
+            max-width: 800px;
+
+            margin: auto;
+        }
+
+        .practice-item {
+            background: #111;
+
+            border: 1px solid #292929;
+
+            padding: 24px;
+
+            margin-bottom: 15px;
+
+            border-radius: 4px;
+        }
+
+        .practice-item h3 {
+            margin-top: 0;
+
+            color: #d4af37;
+        }
+
+        .practice-item p {
+            margin-bottom: 0;
+
+            color: #aaa;
+        }
+
+
+        /* =========================
+           Letonism Compliant
+        ========================= */
+
+        .compliance {
+            text-align: center;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            padding: 45px 30px;
+
+            border-radius: 6px;
+        }
+
+        .compliance-mark {
+            display: inline-block;
+
+            border: 2px solid #d4af37;
+
+            padding: 18px 30px;
+
+            margin-bottom: 25px;
+
+            color: #d4af37;
+
+            font-weight: bold;
+
+            letter-spacing: 0.12em;
+
+            font-size: 1.1rem;
+        }
+
+        .compliance p {
+            max-width: 700px;
+
+            margin: auto;
+
+            color: #aaa;
+        }
+
+
+        /* =========================
+           Kunghel
+        ========================= */
+
+        .kunghel {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 30px;
+
+            align-items: center;
+        }
+
+        .kunghel-text {
+            color: #aaa;
+        }
+
+        .kunghel-panel {
+            background: #111;
+
+            border: 1px solid #292929;
+
+            padding: 35px;
+
+            text-align: center;
+        }
+
+        .kunghel-panel .symbol {
+            font-family: Georgia, serif;
+
+            font-size: 3rem;
+
+            color: #d4af37;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           Letonic
+        ========================= */
+
+        .language-box {
+            max-width: 800px;
+
+            margin: auto;
+
+            background: #111;
+
+            border: 1px solid #292929;
+
+            padding: 30px;
+        }
+
+        .language-box code {
+            color: #d4af37;
+
+            background: #080808;
+
+            padding: 3px 6px;
+
+            border-radius: 3px;
+        }
+
+        .language-box p {
+            color: #aaa;
+        }
+
+
+        /* =========================
+           Articles
+        ========================= */
+
         .note {
             text-align: center;
+
             border-top: 1px solid #222;
-            padding-top: 40px;
+
+            padding-top: 50px;
         }
+
+        .note-description {
+            color: #888;
+
+            margin-bottom: 25px;
+        }
+
         .note-container {
             display: flex;
+
             justify-content: center;
-            margin: 20px 0 40px 0;
+
+            margin: 20px 0 40px;
         }
+
+
+        /* =========================
+           Footer
+        ========================= */
 
         footer {
-            background-color: #000000;
+            background: #000;
+
             color: #555;
-            padding: 30px;
+
+            padding: 50px 20px;
+
             text-align: center;
+
             font-size: 0.85rem;
-            border-top: 1px solid #111;
+
+            border-top: 1px solid #151515;
         }
+
+        footer .footer-title {
+            color: #777;
+
+            font-family: Georgia, serif;
+
+            letter-spacing: 0.1em;
+
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+
+        /* =========================
+           Mobile
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .nav-inner {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                gap: 10px;
+
+                font-size: 0.75rem;
+            }
+
+            header {
+                padding: 75px 20px;
+            }
+
+            .kunghel {
+                grid-template-columns: 1fr;
+            }
+
+            .statement-box {
+                padding: 35px 20px;
+            }
+        }
+
     </style>
 </head>
+
+
 <body>
 
-    <header>
+    <!-- =========================
+         Navigation
+    ========================== -->
+
+    <nav>
+
+        <div class="nav-inner">
+
+            <a href="#top" class="nav-logo">
+                LETONISM
+            </a>
+
+            <div class="nav-links">
+
+                <a href="#about">About</a>
+
+                <a href="#revelation">
+                    Scriptures
+                </a>
+
+                <a href="#beliefs">
+                    Beliefs
+                </a>
+
+                <a href="#practice">
+                    Practice
+                </a>
+
+                <a href="#compliance">
+                    Compliance
+                </a>
+
+                <a href="#kunghel">
+                    Kunghels
+                </a>
+
+                <a href="#language">
+                    Letonic
+                </a>
+
+                <a href="#organization">
+                    Organization
+                </a>
+
+                <a href="#articles">
+                    Articles
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         Hero
+    ========================== -->
+
+    <header id="top">
+
         <h1>LETONISM</h1>
-        <p>The Revelation Pentateuch</p>
+
+        <p>
+            The Faith of the One God Elvé
+        </p>
+
+        <div class="hero-subtitle">
+
+            A religious tradition centered on faith in the
+            One God, the Revelation Pentateuch, prayer,
+            righteous living, and the observance of the commandments.
+
+        </div>
+
     </header>
 
+
     <main>
-        <section class="statement-box">
-            <p class="statement">"We, Letonism, are a religious organization dedicated to the faith of the one true God, Lord Elve."</p>
-        </section>
 
-        <!--ここから-->
 
-        <p>Letonists follow the scriptures, prayers, keep the commandments, and believe in the Lord.</p>
+        <!-- =========================
+             Statement
+        ========================== -->
 
-        <p>The Letonism Organization work to support the lives of Letonists, including the release of Letonism Compliant Mark.</p>
+        <section>
 
-        <p>In addition, we manage meeting halls and places of worship known as Kunghels.</p>
-        
-        <!--ここまで-->
+            <div class="statement-box">
 
-        <section class="note">
-            <div class="note-container">
-                <iframe class="note-embed" src="https://note.com/embed/notes/n4da1a718ef3f" style="border: 0; display: block; max-width: 99%; width: 494px; padding: 0px; margin: 10px 0px; position: static; visibility: visible;" height="400"></iframe><script async src="https://note.com/scripts/embed.js" charset="utf-8"></script>
+                <p class="statement">
+
+                    “We, Letonism, are a religious organization
+                    dedicated to the faith of the One God,
+                    Lord Elvé.”
+
+                </p>
+
+                <p class="statement-author">
+
+                    Declaration of Letonism
+
+                </p>
+
             </div>
+
         </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2026 Letonism. All rights reserved.</p>
-    </footer>
+
+
+        <!-- =========================
+             About
+        ========================== -->
+
+        <section id="about">
+
+            <h2 class="section-title">
+                About Letonism
+            </h2>
+
+            <div class="intro">
+
+                <p>
+                    Letonism is a monotheistic religious tradition
+                    devoted to the worship of the One God, Elvé.
+                </p>
+
+                <p>
+                    Letonists seek to live according to the teachings
+                    of the sacred scriptures, maintain prayer and
+                    religious practice, observe the commandments,
+                    and cultivate a life of gratitude,
+                    responsibility, and righteousness.
+                </p>
+
+                <p>
+                    The Letonism Organization exists to support
+                    Letonists in their religious lives and to
+                    preserve and communicate the teachings and
+                    traditions of Letonism.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Life of a Letonist
+        ========================== -->
+
+        <section>
+
+            <h2 class="section-title">
+                The Life of a Letonist
+            </h2>
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>Faith</h3>
+
+                    <p>
+                        Faith in the One God Elvé forms the
+                        foundation of Letonist religious life.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>Scripture</h3>
+
+                    <p>
+                        Letonists study the sacred scriptures
+                        and seek to understand their teachings.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>Prayer</h3>
+
+                    <p>
+                        Prayer is practiced as an expression
+                        of gratitude, devotion, reflection,
+                        and remembrance of God.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>Commandments</h3>
+
+                    <p>
+                        Religious commandments provide
+                        guidance for daily conduct and
+                        ethical living.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Revelation Pentateuch
+        ========================== -->
+
+        <section id="revelation">
+
+            <h2 class="section-title">
+                The Revelation Pentateuch
+            </h2>
+
+            <div class="intro">
+
+                <p>
+                    The Revelation Pentateuch is the collective
+                    name for the five sacred scriptures of Letonism.
+                </p>
+
+                <p>
+                    These scriptures contain teachings concerning
+                    faith, worship, morality, commandments,
+                    religious practice, and the proper way of life
+                    for Letonists.
+                </p>
+
+            </div>
+
+
+            <div class="scripture">
+
+                <h3>
+                    The Five Sacred Scriptures
+                </h3>
+
+                <p>
+                    The five books form the central scriptural
+                    corpus of Letonism and are studied individually
+                    as well as as a unified tradition.
+                </p>
+
+                <p>
+                    The scriptures are regarded as sacred writings
+                    that guide Letonists in understanding God and
+                    living according to the religious tradition.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Beliefs
+        ========================== -->
+
+        <section id="beliefs">
+
+            <h2 class="section-title">
+                Core Beliefs
+            </h2>
+
+            <div class="belief-list">
+
+
+                <div class="belief">
+
+                    <div class="belief-number">
+                        I
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            The One God
+                        </h3>
+
+                        <p>
+                            Letonism teaches faith in one God,
+                            Elvé, who is the central object of worship.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="belief">
+
+                    <div class="belief-number">
+                        II
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Sacred Scripture
+                        </h3>
+
+                        <p>
+                            The Revelation Pentateuch provides
+                            a foundational source of religious teaching.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="belief">
+
+                    <div class="belief-number">
+                        III
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Righteous Living
+                        </h3>
+
+                        <p>
+                            Faith is expressed not only through
+                            belief, but also through one's conduct
+                            and daily life.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="belief">
+
+                    <div class="belief-number">
+                        IV
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Prayer and Gratitude
+                        </h3>
+
+                        <p>
+                            Prayer and gratitude are important
+                            parts of religious devotion.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="belief">
+
+                    <div class="belief-number">
+                        V
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Observance of the Commandments
+                        </h3>
+
+                        <p>
+                            Letonists are encouraged to study
+                            and observe the commandments of the faith.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             Religious Practice
+        ========================== -->
+
+        <section id="practice">
+
+            <h2 class="section-title">
+                Religious Practice
+            </h2>
+
+            <div class="practice-box">
+
+    <div class="practice-item">
+        <h3>Daily Prayer</h3>
+        <p>
+            Letonists may incorporate prayer and remembrance
+            of Elvé into their daily lives.
+        </p>
+    </div>
+
+    <div class="practice-item">
+        <h3>Study of Scripture</h3>
+        <p>
+            Reading and studying the Revelation Pentateuch
+            is encouraged as a means of understanding the faith.
+        </p>
+    </div>
+
+    <div class="practice-item">
+        <h3>Observance of the Commandments</h3>
+        <p>
+            The commandments provide practical guidance
+            for religious and ethical conduct.
+        </p>
+    </div>
+
+    <div class="practice-item">
+        <h3>Prayer Before Meals</h3>
+        <p>
+            Prayers may be offered before eating as an
+            expression of gratitude to God.
+        </p>
+    </div>
+
+    <div class="practice-item">
+        <h3>Community</h3>
+        <p>
+            Letonists may gather together for prayer,
+            study, discussion, and religious observance.
+        </p>
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     Letonism Compliant
+========================== -->
+
+<section id="compliance">
+
+    <h2 class="section-title">
+        Letonism Compliant
+    </h2>
+
+    <div class="compliance">
+
+        <div class="compliance-mark">
+            LETONISM COMPLIANT
+        </div>
+
+        <p>
+            The Letonism Compliant Mark identifies products
+            and foods recognized as compliant with the relevant
+            requirements of Letonist religious practice.
+        </p>
+
+        <p style="margin-top: 15px;">
+            The mark is intended to help Letonists identify
+            products that meet the established religious standards.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Kunghel
+========================== -->
+
+<section id="kunghel">
+
+    <h2 class="section-title">
+        Kunghels
+    </h2>
+
+    <div class="kunghel">
+
+        <div class="kunghel-text">
+
+            <p>
+                A Kunghel is a meeting hall and place of worship
+                used by Letonists.
+            </p>
+
+            <p>
+                Kunghels may serve as places for prayer,
+                scripture study, religious education,
+                community gatherings, and other activities
+                connected with Letonist religious life.
+            </p>
+
+        </div>
+
+        <div class="kunghel-panel">
+
+            <div class="symbol">
+                ✦
+            </div>
+
+            <h3>
+                Kunghel
+            </h3>
+
+            <p>
+                A place for worship, study,
+                and community.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Letonic Language
+========================== -->
+
+<section id="language">
+
+    <h2 class="section-title">
+        The Letonic Language
+    </h2>
+
+    <div class="language-box">
+
+        <p>
+            Letonic is the historical language of
+            the Leton people and is also used in
+            religious and cultural contexts.
+        </p>
+
+        <p>
+            The language is written primarily using
+            the Latin alphabet, with additional letters
+            including <code>ŋ</code> and <code>ʔ</code>.
+        </p>
+
+        <p>
+            Letonic has an agglutinative grammatical
+            structure and uses case marking on nouns.
+            Its basic word order is
+            Subject–Object–Verb (SOV).
+        </p>
+
+        <p>
+            The study of Letonic provides an additional
+            way to explore Leton culture, religious
+            terminology, scripture, and historical tradition.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Organization
+========================== -->
+
+<section id="organization">
+
+    <h2 class="section-title">
+        The Letonism Organization
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>
+                Religious Education
+            </h3>
+
+            <p>
+                Provides educational materials concerning
+                Letonist beliefs, scriptures, commandments,
+                and religious practice.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>
+                Community
+            </h3>
+
+            <p>
+                Supports the development of communities,
+                meeting halls, and places of worship.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>
+                Standards
+            </h3>
+
+            <p>
+                Establishes and communicates standards
+                connected with Letonism Compliant
+                products and practices.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>
+                Publications
+            </h3>
+
+            <p>
+                Publishes articles and educational
+                materials concerning Letonism
+                and its traditions.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Articles
+========================== -->
+
+<section id="articles" class="note">
+
+    <h2 class="section-title">
+        Latest Articles
+    </h2>
+
+    <p class="note-description">
+        Articles and educational materials for Letonists
+        and readers interested in Letonism.
+    </p>
+
+    <div class="note-container">
+
+        <iframe
+            class="note-embed"
+            src="https://note.com/embed/notes/n4da1a718ef3f"
+            style="
+                border: 0;
+                display: block;
+                max-width: 99%;
+                width: 494px;
+                padding: 0;
+                margin: 10px 0;
+                position: static;
+                visibility: visible;
+            "
+            height="400">
+        </iframe>
+
+        <script
+            async
+            src="https://note.com/scripts/embed.js"
+            charset="utf-8">
+        </script>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     Footer
+========================== -->
+
+<footer>
+
+    <div class="footer-title">
+        LETONISM
+    </div>
+
+    <p>
+        The Faith of the One God Elvé
+    </p>
+
+    <p>
+        &copy; 2026 Letonism. All rights reserved.
+    </p>
+
+</footer>
 
 </body>
-</html>
-
+</html> 
