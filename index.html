@@ -1532,9 +1532,10 @@ function cleanDescription(text) {
     temp.innerHTML = text;
 
     return temp.textContent
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 180);
+    .replace(/\s+/g, " ")
+    .replace(/続きをみる/g, "")
+    .trim()
+    .slice(0, 180);
 
 }
 
