@@ -1351,6 +1351,8 @@
      Footer
 ========================== -->
 
+</main>
+
 <footer>
 
     <div class="footer-title">
@@ -1367,5 +1369,181 @@
 
 </footer>
 
+
+<script>
+
+async function loadArticles() {
+
+    const container =
+        document.getElementById("articles-list");
+
+    try {
+
+        const response =
+            await fetch("/site/articles.json?cache=" + Date.now());
+
+        if (!response.ok) {
+            throw new Error("Failed to load articles.json");
+        }
+
+        const data =
+            await response.json();
+
+        container.innerHTML = "";
+
+        if (
+            !data.articles ||
+            data.articles.length === 0
+        ) {
+
+            container.innerHTML = `
+                <p class="articles-empty">
+                    No articles available.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        data.articles
+            .slice(0, 10)
+            .forEach(article => {
+
+                const card =
+                    document.createElement("a");
+
+                card.className = "article-card";
+
+                card.href = article.url;
+
+                card.target = "_blank";
+
+                card.rel = "noopener noreferrer";
+
+
+                const title =
+                    document.createElement("h3");
+
+                title.textContent =
+                    article.title;
+
+
+                const date =
+                    document.createElement("div");
+
+                date.className =
+                    "article-date";
+
+                date.textContent =
+                    formatDate(article.date);
+
+
+                const description =
+                    document.createElement("p");
+
+                description.className =
+                    "article-description";
+
+                description.textContent =
+                    cleanDescription(
+                        article.description
+                    );
+
+
+                const read =
+                    document.createElement("span");
+
+                read.className =
+                    "article-read";
+
+                read.textContent =
+                    "Read Article →";
+
+
+                card.appendChild(title);
+
+                card.appendChild(date);
+
+                card.appendChild(description);
+
+                card.appendChild(read);
+
+
+                container.appendChild(card);
+
+            });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <p class="articles-error">
+                Unable to load the latest articles.
+            </p>
+        `;
+
+    }
+
+}
+
+
+/* 日付を読みやすくする */
+
+function formatDate(dateString) {
+
+    if (!dateString) {
+        return "";
+    }
+
+    const date =
+        new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+        return dateString;
+    }
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }
+    );
+
+}
+
+
+/* RSS概要からHTMLタグを除去 */
+
+function cleanDescription(text) {
+
+    if (!text) {
+        return "";
+    }
+
+    const temp =
+        document.createElement("div");
+
+    temp.innerHTML = text;
+
+    return temp.textContent
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 180);
+
+}
+
+
+/* 初回読み込み */
+
+loadArticles();
+
+</script>
+
 </body>
-</html> 
+</html>
