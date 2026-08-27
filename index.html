@@ -527,6 +527,122 @@
             margin: 20px 0 40px;
         }
 
+        .articles-section {
+            max-width: 900px;
+
+            margin: 0 auto 90px;
+        }
+
+        .articles-list {
+            display: grid;
+
+            gap: 15px;
+        }
+
+        .article-card {
+            display: block;
+
+            background: #111;
+
+            border: 1px solid #292929;
+
+            border-radius: 5px;
+
+            padding: 24px;
+
+            transition:
+                border-color 0.2s,
+                transform 0.2s;
+        }
+
+        .article-card:hover {
+            border-color: #6e5a20;
+
+            transform: translateY(-2px);
+        }
+
+        .article-card h3 {
+            margin: 0 0 8px;
+
+            color: #d4af37;
+
+            font-family: Georgia, "Times New Roman", serif;
+
+            font-size: 1.2rem;
+        }
+
+        .article-date {
+            color: #666;
+
+            font-size: 0.8rem;
+
+            margin-bottom: 10px;
+        }
+
+        .article-description {
+            color: #999;
+
+            margin: 0;
+
+            font-size: 0.9rem;
+        }
+
+        .article-read {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            color: #d4af37;
+
+            font-size: 0.85rem;
+        }
+
+        .articles-loading,
+        .articles-error,
+        .articles-empty {
+            text-align: center;
+
+            color: #777;
+
+            padding: 30px;
+        }
+
+        /* =========================
+           All Articles Button
+        ========================= */
+
+        .articles-button-container {
+            text-align: center;
+
+            margin-top: 30px;
+        }
+
+        .articles-button {
+            display: inline-block;
+
+            padding: 12px 28px;
+
+            border: 1px solid #d4af37;
+
+            color: #d4af37;
+
+            font-family: Georgia, "Times New Roman", serif;
+
+            font-size: 0.9rem;
+
+            letter-spacing: 0.05em;
+
+            transition:
+                background-color 0.2s,
+                color 0.2s;
+        }
+
+        .articles-button:hover {
+            background-color: #d4af37;
+
+            color: #000;
+        }
+
 
         /* =========================
            Footer
@@ -590,119 +706,7 @@
             }
         }
 
-/* =========================
-   Latest Articles
-========================= */
-
-.articles-section {
-    max-width: 900px;
-    margin: 0 auto 90px;
-}
-
-.articles-list {
-    display: grid;
-    gap: 15px;
-}
-
-.article-card {
-    display: block;
-
-    background: #111;
-
-    border: 1px solid #292929;
-
-    border-radius: 5px;
-
-    padding: 24px;
-
-    transition:
-        border-color 0.2s,
-        transform 0.2s;
-}
-
-.article-card:hover {
-    border-color: #6e5a20;
-    transform: translateY(-2px);
-}
-
-.article-card h3 {
-    margin: 0 0 8px;
-
-    color: #d4af37;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 1.2rem;
-}
-
-.article-date {
-    color: #666;
-
-    font-size: 0.8rem;
-
-    margin-bottom: 10px;
-}
-
-.article-description {
-    color: #999;
-
-    margin: 0;
-
-    font-size: 0.9rem;
-}
-
-.article-read {
-    display: inline-block;
-
-    margin-top: 15px;
-
-    color: #d4af37;
-
-    font-size: 0.85rem;
-}
-
-.articles-loading,
-.articles-error,
-.articles-empty {
-    text-align: center;
-
-    color: #777;
-
-    padding: 30px;
-}
-
     </style>
-
-.articles-button-container {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.articles-button {
-    display: inline-block;
-
-    padding: 12px 28px;
-
-    border: 1px solid #d4af37;
-
-    color: #d4af37;
-
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 0.9rem;
-
-    letter-spacing: 0.05em;
-
-    transition:
-        background-color 0.2s,
-        color 0.2s;
-}
-
-.articles-button:hover {
-    background-color: #d4af37;
-    color: #000;
-}
-
 </head>
 
 
