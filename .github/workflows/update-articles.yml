@@ -1,0 +1,86 @@
+name: Update Letonism Articles
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+
+  workflow_dispatch:
+
+  push:
+    paths:
+      - ".github/workflows/update-articles.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update-articles:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          pip install feedparser
+
+      - name: Fetch note RSS
+        run: |
+          python <<'PY'
+          import feedparser
+          import json
+          import os
+
+          RSS_URL = "https://note.com/letonism/rss"
+          OUTPUT = "site/articles.json"
+
+          feed = feedparser.parse(RSS_URL)
+
+          articles = []
+
+          for entry in feed.entries:
+              articles.append({
+                  "title": entry.get("title", ""),
+                  "url": entry.get("link", ""),
+                  "date": entry.get("published", ""),
+                  "description": entry.get("summary", "")
+              })
+
+          data = {
+              "updated": True,
+              "source": RSS_URL,
+              "articles": articles
+          }
+
+          os.makedirs(os.path.dirname(OUTPUT), exist_ok=True)
+
+          with open(OUTPUT, "w", encoding="utf-8") as f:
+              json.dump(
+                  data,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          print(f"Found {len(articles)} articles.")
+          PY
+
+      - name: Commit updated articles.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add site/articles.json
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Update latest articles"
+            git push
+          fi
