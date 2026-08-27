@@ -590,6 +590,87 @@
             }
         }
 
+/* =========================
+   Latest Articles
+========================= */
+
+.articles-section {
+    max-width: 900px;
+    margin: 0 auto 90px;
+}
+
+.articles-list {
+    display: grid;
+    gap: 15px;
+}
+
+.article-card {
+    display: block;
+
+    background: #111;
+
+    border: 1px solid #292929;
+
+    border-radius: 5px;
+
+    padding: 24px;
+
+    transition:
+        border-color 0.2s,
+        transform 0.2s;
+}
+
+.article-card:hover {
+    border-color: #6e5a20;
+    transform: translateY(-2px);
+}
+
+.article-card h3 {
+    margin: 0 0 8px;
+
+    color: #d4af37;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.2rem;
+}
+
+.article-date {
+    color: #666;
+
+    font-size: 0.8rem;
+
+    margin-bottom: 10px;
+}
+
+.article-description {
+    color: #999;
+
+    margin: 0;
+
+    font-size: 0.9rem;
+}
+
+.article-read {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    color: #d4af37;
+
+    font-size: 0.85rem;
+}
+
+.articles-loading,
+.articles-error,
+.articles-empty {
+    text-align: center;
+
+    color: #777;
+
+    padding: 30px;
+}
+
     </style>
 </head>
 
@@ -1243,7 +1324,7 @@
      Articles
 ========================== -->
 
-<section id="articles" class="note">
+<section id="articles" class="articles-section">
 
     <h2 class="section-title">
         Latest Articles
@@ -1254,34 +1335,15 @@
         and readers interested in Letonism.
     </p>
 
-    <div class="note-container">
+    <div id="articles-list" class="articles-list">
 
-        <iframe
-            class="note-embed"
-            src="https://note.com/embed/notes/n4da1a718ef3f"
-            style="
-                border: 0;
-                display: block;
-                max-width: 99%;
-                width: 494px;
-                padding: 0;
-                margin: 10px 0;
-                position: static;
-                visibility: visible;
-            "
-            height="400">
-        </iframe>
-
-        <script
-            async
-            src="https://note.com/scripts/embed.js"
-            charset="utf-8">
-        </script>
+        <p class="articles-loading">
+            Loading latest articles...
+        </p>
 
     </div>
 
 </section>
-
 </main>
 
 
