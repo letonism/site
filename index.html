@@ -1537,15 +1537,14 @@ function cleanDescription(text) {
             .trim();
 
     if (description.length > 180) {
-
         description =
             description.slice(0, 180).trim();
+    }
 
-        if (description.endsWith(".")) {
-            description += "..";
-        } else {
-            description += "...";
-        }
+    if (description.endsWith(".")) {
+        description += "..";
+    } else {
+        description += "...";
     }
 
     return description;
