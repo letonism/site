@@ -1519,7 +1519,6 @@ function formatDate(dateString) {
 
 
 /* RSS概要からHTMLタグを除去 */
-
 function cleanDescription(text) {
 
     if (!text) {
@@ -1531,12 +1530,25 @@ function cleanDescription(text) {
 
     temp.innerHTML = text;
 
-    return temp.textContent
-    .replace(/\s+/g, " ")
-    .replace(/続きをみる/g, "")
-    .trim()
-    .slice(0, 180);
+    let description =
+        temp.textContent
+            .replace(/\s+/g, " ")
+            .replace(/続きをみる/g, "")
+            .trim();
 
+    if (description.length > 180) {
+
+        description =
+            description.slice(0, 180).trim();
+
+        if (description.endsWith(".")) {
+            description += "..";
+        } else {
+            description += "...";
+        }
+    }
+
+    return description;
 }
 
 
