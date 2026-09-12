@@ -215,14 +215,12 @@
  * = Letoniu Year 1, Month 1, Day 1
  *
  * Calendar structure:
- *
  * - 12 months
  * - 30 days per month
  * - 360 regular days
  * - Great Holy Days follow the 12 months
  *
  * Great Holy Days:
- *
  * - Normally: 5 days
  * - Every 4th year: 6 days
  * - Every 128th year: 5 days
@@ -230,20 +228,12 @@
  * - Every 250,000th year: 6 days
  *
  * Special rules:
- *
  * - The 128-year rule overrides the ordinary
  *   4-year leap-year rule.
- *
  * - The 3,320-year rule overrides the ordinary
  *   4-year leap-year rule.
- *
- * - If a year is divisible by both 128 and 3,320,
- *   it still has 5 Great Holy Days.
- *
- * - The 250,000-year rule gives 6 Great Holy Days.
- *   Because 250,000 is divisible by 4, its six days
- *   are already represented by the ordinary leap-year
- *   calculation.
+ * - The 250,000-year rule has priority over
+ *   the 128-year and 3,320-year rules.
  */
 
 
@@ -253,17 +243,15 @@
  *
  * Astronomical year numbering is used internally:
  *
- * 1 B.C.  = year 0
- * 2 B.C.  = year -1
- * ...
+ * 1 B.C. = year 0
+ * 2 B.C. = year -1
  *
  * Therefore:
  *
  * 6,998,027 B.C. = astronomical year -6,998,026
- *
- * The returned value is relative to 1970-01-01.
  */
 function daysFromCivil(year, month, day) {
+
     year -= month <= 2 ? 1 : 0;
 
     const era = Math.floor(
@@ -309,8 +297,7 @@ const LETONIU_EPOCH = daysFromCivil(
 
 
 /*
- * Determine whether a Letoniu year is an
- * ordinary 4-year leap year.
+ * Ordinary 4-year leap year.
  */
 function isLetoniuLeapYear(year) {
     return year % 4 === 0;
@@ -318,11 +305,10 @@ function isLetoniuLeapYear(year) {
 
 
 /*
- * Determine the number of Great Holy Days
+ * Return the number of Great Holy Days
  * in a Letoniu year.
  *
  * Priority:
- *
  * 1. 250,000-year rule
  * 2. 128-year rule
  * 3. 3,320-year rule
@@ -331,49 +317,29 @@ function isLetoniuLeapYear(year) {
  */
 function getGreatHolyDays(year) {
 
-    /*
-     * Every 250,000th year has six
-     * Great Holy Days.
-     */
     if (year % 250000 === 0) {
         return 6;
     }
 
-    /*
-     * Every 128th year has five
-     * Great Holy Days.
-     */
     if (year % 128 === 0) {
         return 5;
     }
 
-    /*
-     * Every 3,320th year has five
-     * Great Holy Days.
-     */
     if (year % 3320 === 0) {
         return 5;
     }
 
-    /*
-     * Ordinary leap years have six
-     * Great Holy Days.
-     */
     if (isLetoniuLeapYear(year)) {
         return 6;
     }
 
-    /*
-     * Ordinary years have five
-     * Great Holy Days.
-     */
     return 5;
 }
 
 
 /*
- * Return the total number of days in
- * a Letoniu year.
+ * Return the total number of days
+ * in a Letoniu year.
  */
 function getLetoniuYearLength(year) {
     return 360 + getGreatHolyDays(year);
@@ -388,30 +354,13 @@ function getLetoniuYearLength(year) {
  *
  * For n = year - 1:
  *
- * Base:
- *   365 days × n
+ * 365 × n
+ * + floor(n / 4)
+ * - floor(n / 128)
+ * - floor(n / 3320)
+ * + floor(n / 212480)
  *
- * Ordinary leap years:
- *   + floor(n / 4)
- *
- * 128-year special years:
- *   - floor(n / 128)
- *
- * 3,320-year special years:
- *   - floor(n / 3,320)
- *
- * Overlap between 128 and 3,320:
- *   + floor(n / 212,480)
- *
- * Why 212,480?
- *
- * It is the least common multiple of
- * 128 and 3,320.
- *
- * The 250,000-year rule requires no
- * additional correction because 250,000
- * is divisible by 4. Therefore those years
- * already receive the ordinary +1 leap day.
+ * 212,480 is the LCM of 128 and 3,320.
  */
 function daysBeforeLetoniuYear(year) {
 
@@ -423,27 +372,12 @@ function daysBeforeLetoniuYear(year) {
 
     let total = n * 365;
 
-    /*
-     * Ordinary 4-year leap years.
-     */
     total += Math.floor(n / 4);
 
-    /*
-     * 128-year special rule.
-     */
     total -= Math.floor(n / 128);
 
-    /*
-     * 3,320-year special rule.
-     */
     total -= Math.floor(n / 3320);
 
-    /*
-     * Restore the double subtraction
-     * where both special rules coincide.
-     *
-     * LCM(128, 3320) = 212,480.
-     */
     total += Math.floor(n / 212480);
 
     return total;
@@ -451,22 +385,13 @@ function daysBeforeLetoniuYear(year) {
 
 
 /*
- * Find the Letoniu year containing a
- * particular day offset.
- *
- * Binary search is used so that dates
- * millions of years away from the epoch
- * can still be converted efficiently.
+ * Find the Letoniu year containing
+ * a particular day offset.
  */
 function findLetoniuYear(dayOffset) {
 
     let low = 1;
 
-    /*
-     * Every Letoniu year is at least
-     * 365 days long, so this is a safe
-     * initial upper bound.
-     */
     let high =
         Math.floor(dayOffset / 365) + 1;
 
@@ -492,8 +417,8 @@ function findLetoniuYear(dayOffset) {
 
 
 /*
- * Convert a Gregorian date to a
- * Letoniu Calendar date.
+ * Convert a Gregorian date
+ * to a Letoniu Calendar date.
  */
 function convertGregorianToLetoniu(
     year,
@@ -512,38 +437,24 @@ function convertGregorianToLetoniu(
         gregorianDay -
         LETONIU_EPOCH;
 
-    /*
-     * Dates before the epoch cannot be
-     * represented in the Letoniu Calendar.
-     */
     if (dayOffset < 0) {
         throw new RangeError(
             "This date is before the beginning of the Letoniu Calendar."
         );
     }
 
-    /*
-     * Determine the Letoniu year.
-     */
-    const letOnIuYear =
+    const letoniuYear =
         findLetoniuYear(dayOffset);
 
-    /*
-     * Determine the day within that year.
-     */
     const dayOfYear =
         dayOffset -
         daysBeforeLetoniuYear(
-            letOnIuYear
+            letoniuYear
         );
 
-    /*
-     * Determine the number of Great Holy Days
-     * for the current year.
-     */
     const greatHolyDays =
         getGreatHolyDays(
-            letOnIuYear
+            letoniuYear
         );
 
     /*
@@ -552,7 +463,7 @@ function convertGregorianToLetoniu(
     if (dayOfYear < 360) {
 
         return {
-            year: letOnIuYear,
+            year: letoniuYear,
 
             month:
                 Math.floor(
@@ -570,11 +481,11 @@ function convertGregorianToLetoniu(
     }
 
     /*
-     * Days after Day 360 are the
-     * Great Holy Days.
+     * Days after Day 360 are
+     * the Great Holy Days.
      */
     return {
-        year: letOnIuYear,
+        year: letoniuYear,
 
         month: null,
 
@@ -641,23 +552,6 @@ function initialiseLetoniuConverter() {
             "letoniu-details"
         );
 
-    /*
-     * Stop safely if the required
-     * elements do not exist.
-     */
-    if (
-        !input ||
-        !button ||
-        !output ||
-        !details
-    ) {
-        return;
-    }
-
-
-    /*
-     * Convert button.
-     */
     button.addEventListener(
         "click",
         function () {
@@ -668,40 +562,32 @@ function initialiseLetoniuConverter() {
 
             details.textContent = "";
 
+            if (!input.value) {
+
+                output.textContent =
+                    "Please select a Gregorian date.";
+
+                output.classList.add(
+                    "error"
+                );
+
+                return;
+            }
+
+            const parts =
+                input.value.split("-");
+
+            const year =
+                Number(parts[0]);
+
+            const month =
+                Number(parts[1]);
+
+            const day =
+                Number(parts[2]);
 
             try {
 
-                /*
-                 * Require a date.
-                 */
-                if (!input.value) {
-                    throw new Error(
-                        "Please select a Gregorian date."
-                    );
-                }
-
-
-                /*
-                 * Parse YYYY-MM-DD.
-                 */
-                const parts =
-                    input.value
-                        .split("-")
-                        .map(Number);
-
-                const year =
-                    parts[0];
-
-                const month =
-                    parts[1];
-
-                const day =
-                    parts[2];
-
-
-                /*
-                 * Convert the date.
-                 */
                 const result =
                     convertGregorianToLetoniu(
                         year,
@@ -709,33 +595,17 @@ function initialiseLetoniuConverter() {
                         day
                     );
 
-
-                /*
-                 * Display the result.
-                 */
                 output.textContent =
-                    formatLetoniuDate(
-                        result
-                    );
+                    formatLetoniuDate(result);
 
-
-                /*
-                 * Display information about
-                 * the Great Holy Days.
-                 */
                 details.textContent =
-                    "This year has " +
-                    result.greatHolyDays +
-                    " Great Holy Days.";
+                    "Great Holy Days in this year: " +
+                    result.greatHolyDays;
 
             } catch (error) {
 
-                /*
-                 * Display errors.
-                 */
                 output.textContent =
-                    error.message ||
-                    "Conversion failed.";
+                    error.message;
 
                 output.classList.add(
                     "error"
@@ -747,22 +617,12 @@ function initialiseLetoniuConverter() {
 
 
 /*
- * Start the converter after the
- * document has loaded.
+ * Start the converter.
  */
-if (
-    document.readyState === "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initialiseLetoniuConverter
-    );
-
-} else {
-
-    initialiseLetoniuConverter();
-}
+document.addEventListener(
+    "DOMContentLoaded",
+    initialiseLetoniuConverter
+);
 </script>
 
 </body>
