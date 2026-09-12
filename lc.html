@@ -254,7 +254,16 @@ function daysFromCivil(year, month, day) {
 
     year -= month <= 2 ? 1 : 0;
 
-    const era = Math.floor(
+    /*
+     * FIX: this must truncate toward zero, not floor.
+     * The (year - 399)/400 trick emulates C-style truncating
+     * division; Math.floor() rounds toward -Infinity instead,
+     * which silently shifts every date before astronomical
+     * year 0 (1 B.C.) one day earlier than it should be —
+     * including this calendar's own epoch, which sits deep
+     * in negative territory.
+     */
+    const era = Math.trunc(
         (year >= 0 ? year : year - 399) / 400
     );
 
@@ -352,15 +361,36 @@ function getLetoniuYearLength(year) {
  *
  * Year 1 begins at day 0.
  *
+ * This is a closed-form (inclusion-exclusion) version of
+ * summing getGreatHolyDays(y) - 5 for y = 1..year-1, honoring
+ * the same priority order as getGreatHolyDays():
+ * 250,000-year rule > 128-year rule > 3,320-year rule >
+ * ordinary 4-year leap rule.
+ *
  * For n = year - 1:
  *
  * 365 × n
- * + floor(n / 4)
- * - floor(n / 128)
- * - floor(n / 3320)
- * + floor(n / 212480)
+ * + floor(n / 4)                  ordinary leap-bonus candidates
+ * - floor(n / 128)                lose bonus: 128-year rule
+ * - floor(n / 3320)               lose bonus: 3,320-year rule
+ * + floor(n / 53,120)             128 & 3,320 both apply (bonus lost once, not twice)
+ * + floor(n / 2,000,000)          128 & 250,000 both apply (250,000 restores the bonus)
+ * + floor(n / 20,750,000)         3,320 & 250,000 both apply (ditto)
+ * - floor(n / 166,000,000)        128 & 3,320 & 250,000 all apply (correct for double add above)
  *
- * 212,480 is the LCM of 128 and 3,320.
+ * FIX: the original code used 212,480 as "the LCM of 128 and
+ * 3,320" — that is wrong; the true LCM is 53,120
+ * (gcd(128, 3320) = 8, so lcm = 128 × 3320 / 8 = 53,120). Using
+ * 212,480 applied the correction 4x too rarely. The original
+ * code also never accounted for the 250,000-year rule's
+ * interaction with the 128-year and 3,320-year rules at all, even
+ * though getGreatHolyDays() gives the 250,000-year rule top
+ * priority. Both omissions are far from theoretical: today's
+ * Letoniu year (~7,000,064) has already passed the 53,120-year
+ * boundary about 130 times and the 2,000,000-year boundary
+ * (lcm(128, 250000)) once, so the original formula's cumulative
+ * error is already about -102 days as of today, not something
+ * that only shows up in the deep future.
  */
 function daysBeforeLetoniuYear(year) {
 
@@ -378,7 +408,13 @@ function daysBeforeLetoniuYear(year) {
 
     total -= Math.floor(n / 3320);
 
-    total += Math.floor(n / 212480);
+    total += Math.floor(n / 53120);
+
+    total += Math.floor(n / 2000000);
+
+    total += Math.floor(n / 20750000);
+
+    total -= Math.floor(n / 166000000);
 
     return total;
 }
