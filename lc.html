@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letoniu Calendar Converter</title>
+<style>
+    :root {
+        color-scheme: light dark;
+        --bg: #f5f5f7;
+        --card: #ffffff;
+        --text: #171717;
+        --muted: #666;
+        --border: #d8d8dc;
+        --accent: #3949ab;
+        --accent-hover: #303f9f;
+        --error: #b3261e;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg: #111216;
+            --card: #1b1c21;
+            --text: #f1f1f1;
+            --muted: #aaa;
+            --border: #383a42;
+            --accent: #7986cb;
+            --accent-hover: #9fa8da;
+            --error: #ff8a80;
+        }
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont,
+            "Segoe UI", sans-serif;
+        display: flex;
+        justify-content: center;
+        padding: 40px 16px;
+    }
+
+    main {
+        width: min(680px, 100%);
+    }
+
+    h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 6vw, 42px);
+        line-height: 1.15;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        margin: 0 0 28px;
+        line-height: 1.6;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    label {
+        display: block;
+        font-weight: 650;
+        margin-bottom: 8px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--card);
+        color: var(--text);
+        font: inherit;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 14px;
+        padding: 13px 16px;
+        border: 0;
+        border-radius: 10px;
+        background: var(--accent);
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: var(--accent-hover);
+    }
+
+    .result {
+        margin-top: 22px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        min-height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: clamp(20px, 5vw, 30px);
+        font-weight: 750;
+        line-height: 1.4;
+    }
+
+    .result.error {
+        color: var(--error);
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .details {
+        margin-top: 12px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    footer {
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+    }
+</style>
+</head>
+
+<body>
+<main>
+    <h1>Letoniu Calendar Converter</h1>
+    <p class="subtitle">
+        Convert a Gregorian date into the Letoniu Calendar.
+    </p>
+
+    <section class="card">
+        <label for="gregorian-date">Gregorian date</label>
+        <input id="gregorian-date" type="date">
+
+        <button id="convert-letoniu" type="button">Convert</button>
+
+        <div id="letoniu-result" class="result" aria-live="polite">
+            Select a date and press Convert.
+        </div>
+
+        <div id="letoniu-details" class="details"></div>
+    </section>
+
+    <footer>
+        The Letoniu Calendar begins on September 10, 6,998,027 B.C.
+        (proleptic Gregorian calendar), which is Year 1, Month 1, Day 1.
+        It has twelve 30-day months followed by the Great Holy Days.
+    </footer>
+</main>
+
+<script>
+"use strict";
+
+/*
+ * Letoniu Calendar
+ *
+ * Epoch:
+ * September 10, 6,998,027 B.C.
+ * = Letoniu Year 1, Month 1, Day 1
+ *
+ * Calendar:
+ * - 12 months
+ * - 30 days per month
+ * - 360 regular days
+ * - Great Holy Days: 5 or 6 days
+ * - Leap years: every 4 years
+ * - Every 128th year: 5 Great Holy Days
+ * - Every 3,320th year: 5 Great Holy Days
+ * - Every 250,000th year: 6 Great Holy Days
+ *
+ * The five-day rules take precedence over the ordinary
+ * leap-year rule. The 250,000-year rule gives six days.
+ */
+
+
+/*
+ * Convert a proleptic Gregorian calendar date to an integer
+ * day number. This algorithm works with astronomical year
+ * numbering, so:
+ *
+ * 6,998,027 B.C. = astronomical year -6,998,026
+ *
+ * The returned value is relative to 1970-01-01.
+ */
+function daysFromCivil(year, month, day) {
+    year -= month <= 2 ? 1 : 0;
+
+    const era = Math.floor(
+        (year >= 0 ? year : year - 399) / 400
+    );
+
+    const yoe = year - era * 400;
+
+    const mp = month + (month > 2 ? -3 : 9);
+
+    const doy =
+        Math.floor((153 * mp + 2) / 5) +
+        day - 1;
+
+    const doe =
+        yoe * 365 +
+        Math.floor(yoe / 4) -
+        Math.floor(yoe / 100) +
+        doy;
+
+    return (
+        era * 146097 +
+        doe -
+        719468
+    );
+}
+
+
+/*
+ * Letoniu Calendar epoch.
+ */
+const LETONIU_EPOCH = daysFromCivil(
+    -6998026,
+    9,
+    10
+);
+
+
+/*
+ * Ordinary Letoniu leap year.
+ */
+function isLetoniuLeapYear(year) {
+    return year % 4 === 0;
+}
+
+
+/*
+ * Number of Great Holy Days in a year.
+ *
+ * Special five-day rules take precedence over
+ * the ordinary leap-year rule.
+ */
+function getGreatHolyDays(year) {
+    if (year % 250000 === 0) {
+        return 6;
+    }
+
+    if (year % 128 === 0) {
+        return 5;
+    }
+
+    if (year % 3320 === 0) {
+        return 5;
+    }
+
+    return isLetoniuLeapYear(year) ? 6 : 5;
+}
+
+
+/*
+ * Length of a Letoniu year.
+ */
+function getLetoniuYearLength(year) {
+    return 360 + getGreatHolyDays(year);
+}
+
+
+/*
+ * Number of days before the beginning of a given year.
+ *
+ * This uses arithmetic rather than looping through every
+ * previous year, so conversion remains fast even though
+ * the epoch is millions of years in the past.
+ *
+ * Baseline:
+ *   365 days per year
+ *
+ * Add:
+ *   +1 for every ordinary leap year
+ *
+ * Remove:
+ *   -1 for years divisible by 128
+ *   -1 for years divisible by 3,320
+ *
+ * Add back the overlap between 128 and 3,320.
+ *
+ * The 250,000-year rule needs no additional term here:
+ * 250,000 is itself divisible by 4, so its six-day
+ * Great Holy Days are already represented by the
+ * ordinary leap-year term.
+ */
+function daysBeforeLetoniuYear(year) {
+    if (year <= 1) {
+        return 0;
+    }
+
+    const n = year - 1;
+
+    let total = n * 365;
+
+    total += Math.floor(n / 4);
+
+    total -= Math.floor(n / 128);
+    total -= Math.floor(n / 3320);
+
+    /*
+     * LCM(128, 3320) = 212,480.
+     */
+    total += Math.floor(n / 212480);
+
+    return total;
+}
+
+
+/*
+ * Find the Letoniu year containing dayOffset.
+ *
+ * Binary search is used here. A simple linear correction
+ * would require millions of iterations for modern dates,
+ * which is precisely the sort of nonsense this converter
+ * should avoid.
+ */
+function findLetoniuYear(dayOffset) {
+    let low = 1;
+    let high = Math.floor(dayOffset / 365) + 1;
+
+    while (low < high) {
+        const middle =
+            Math.floor((low + high + 1) / 2);
+
+        if (
+            daysBeforeLetoniuYear(middle) <= dayOffset
+        ) {
+            low = middle;
+        } else {
+            high = middle - 1;
+        }
+    }
+
+    return low;
+}
+
+
+/*
+ * Convert a Gregorian date to a Letoniu date.
+ */
+function convertGregorianToLetoniu(
+    year,
+    month,
+    day
+) {
+    const gregorianDay =
+        daysFromCivil(year, month, day);
+
+    const dayOffset =
+        gregorianDay - LETONIU_EPOCH;
+
+    if (dayOffset < 0) {
+        throw new RangeError(
+            "This date is before the beginning of the Letoniu Calendar."
+        );
+    }
+
+    const letiniuYear =
+        findLetoniuYear(dayOffset);
+
+    const dayOfYear =
+        dayOffset -
+        daysBeforeLetoniuYear(letiniuYear);
+
+    const greatHolyDays =
+        getGreatHolyDays(letiniuYear);
+
+    /*
+     * The first 360 days are the twelve months.
+     */
+    if (dayOfYear < 360) {
+        return {
+            year: letiniuYear,
+            month: Math.floor(dayOfYear / 30) + 1,
+            day: (dayOfYear % 30) + 1,
+            greatHolyDay: null,
+            greatHolyDays: greatHolyDays
+        };
+    }
+
+    /*
+     * The days after the twelve months are the
+     * Great Holy Days.
+     */
+    return {
+        year: letiniuYear,
+        month: null,
+        day: null,
+        greatHolyDay: dayOfYear - 359,
+        greatHolyDays: greatHolyDays
+    };
+}
+
+
+/*
+ * Format a Letoniu date for display.
+ */
+function formatLetoniuDate(result) {
+    if (result.greatHolyDay !== null) {
+        return (
+            "Year " + result.year +
+            ", Great Holy Day " +
+            result.greatHolyDay
+        );
+    }
+
+    return (
+        "Year " + result.year +
+        ", Month " + result.month +
+        ", Day " + result.day
+    );
+}
+
+
+/*
+ * Browser interface.
+ */
+function initialiseLetoniuConverter() {
+    const input =
+        document.getElementById("gregorian-date");
+
+    const button =
+        document.getElementById("convert-letoniu");
+
+    const output =
+        document.getElementById("letoniu-result");
+
+    const details =
+        document.getElementById("letoniu-details");
+
+    if (!input || !button || !output) {
+        return;
+    }
+
+    button.addEventListener("click", function () {
+        output.classList.remove("error");
+        details.textContent = "";
+
+        try {
+            if (!input.value) {
+                throw new Error(
+                    "Please select a Gregorian date."
+                );
+            }
+
+            const parts =
+                input.value.split("-").map(Number);
+
+            const year = parts[0];
+            const month = parts[1];
+            const day = parts[2];
+
+            const result =
+                convertGregorianToLetoniu(
+                    year,
+                    month,
+                    day
+                );
+
+            output.textContent =
+                formatLetoniuDate(result);
+
+            if (result.greatHolyDay !== null) {
+                details.textContent =
+                    "This year has " +
+                    result.greatHolyDays +
+                    " Great Holy Days.";
+            } else {
+                details.textContent =
+                    "This year has " +
+                    result.greatHolyDays +
+                    " Great Holy Days.";
+            }
+
+        } catch (error) {
+            output.textContent =
+                error.message || "Conversion failed.";
+
+            output.classList.add("error");
+        }
+    });
+}
+
+
+if (document.readyState === "loading") {
+    document.addEventListener(
+        "DOMContentLoaded",
+        initialiseLetoniuConverter
+    );
+} else {
+    initialiseLetoniuConverter();
+}
+</script>
+</body>
+</html>
